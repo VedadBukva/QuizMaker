@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuizMaker</name>
+    </assembly>
+    <members>
+        <member name="T:QuizMaker.Api.App_Start.SwaggerConfig">
+            <summary>
+            Configures Swagger (OpenAPI) documentation for the Web API.
+            </summary>
+            <remarks>
+            Swagger is used to provide interactive API documentation via Swagger UI.
+            
+            This configuration:
+            - Registers Swagger endpoints
+            - Defines API version metadata
+            - Includes XML documentation files to enrich endpoint and model descriptions
+            
+            XML documentation files must be enabled in project build settings
+            (Project Properties -> Build -> XML documentation file).
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.App_Start.SwaggerConfig.Register">
+            <summary>
+            Registers Swagger and Swagger UI for the application.
+            </summary>
+            <remarks>
+            The method loads XML documentation files (if present) from the application's bin folder
+            to enrich Swagger descriptions for controllers, actions, and DTOs.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Api.WebApiConfig">
+            <summary>
+            Configures ASP.NET Web API routing, formatting and global services.
+            </summary>
+            <remarks>
+            This configuration is executed during application startup and is responsible for:
+            - Enabling attribute-based routing
+            - Registering a default conventional route
+            - Registering a global exception handler
+            - Configuring JSON serialization settings (e.g., enums as strings)
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Registers Web API configuration for the application.
+            </summary>
+            <param name="config">HTTP configuration instance used to register routes and services.</param>
+            <remarks>
+            Routing:
+            - Attribute routing is enabled to allow explicit route definitions on controllers/actions.
+            - A fallback conventional route is registered for controllers using default conventions.
+            
+            Error handling:
+            - A global exception handler is registered to map application exceptions into consistent HTTP responses.
+            
+            JSON:
+            - Enums are serialized as strings (e.g., "Asc"/"Desc") instead of numeric values.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Api.Controllers.ExportersController">
+            <summary>
+            Provides access to available quiz export formats.
+            </summary>
+            <remarks>
+            This controller exposes metadata about dynamically registered exporters.
+            Exporters are discovered using MEF and can be used when calling the quiz export endpoint.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.ExportersController.#ctor(QuizMaker.Application.Services.ExporterService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Api.Controllers.ExportersController"/> class.
+            </summary>
+            <param name="exporterService">
+            Service used to retrieve available exporter metadata.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.ExportersController.GetAll">
+            <summary>
+            Retrieves all currently available export formats.
+            </summary>
+            <returns>
+            A collection of exporter metadata including key, display name, file extension and MIME type.
+            </returns>
+            <response code="200">Returns the list of available exporters.</response>
+        </member>
+        <member name="T:QuizMaker.Api.Controllers.QuestionsController">
+            <summary>
+            Provides operations related to quiz questions.
+            </summary>
+            <remarks>
+            Supports searching and retrieving questions with pagination.
+            Typically used when selecting existing questions while creating or updating a quiz.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuestionsController.#ctor(QuizMaker.Application.Services.QuestionService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Api.Controllers.QuestionsController"/> class.
+            </summary>
+            <param name="questionService">
+            Service responsible for question-related operations.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuestionsController.GetPaged(QuizMaker.Application.Requests.QuestionPagedRequest)">
+            <summary>
+            Retrieves a paginated list of questions.
+            </summary>
+            <param name="request">
+            Optional search and pagination parameters.
+            </param>
+            <returns>
+            A paged result containing lightweight question representations.
+            </returns>
+            <response code="200">Returns paginated questions.</response>
+            <response code="400">Invalid request parameters.</response>
+            <remarks>
+            If no search term is provided, all questions are returned in paged format.
+            Results are ordered by creation date (descending).
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Api.Controllers.QuizExportController">
+            <summary>
+            Provides functionality for exporting quizzes in various formats.
+            </summary>
+            <remarks>
+            Allows clients to download a quiz in a selected file format (e.g., CSV, TXT, PDF).
+            Available exporters are dynamically discovered using MEF.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizExportController.#ctor(QuizMaker.Application.Services.QuizExportService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Api.Controllers.QuizExportController"/> class.
+            </summary>
+            <param name="quizExportService">
+            Service responsible for handling quiz export operations.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizExportController.Export(System.Guid,System.String)">
+            <summary>
+            Exports a quiz in the specified format.
+            </summary>
+            <param name="id">
+            Unique identifier of the quiz to export.
+            </param>
+            <param name="exporter">
+            Key of the exporter to use (e.g., "csv", "txt", "pdf").
+            </param>
+            <returns>
+            A downloadable file containing quiz questions (without answers).
+            </returns>
+            <response code="200">Returns the exported file.</response>
+            <response code="400">Exporter key is missing or invalid.</response>
+            <response code="404">Quiz not found.</response>
+            <remarks>
+            The exporter key must match one of the keys returned by the 
+            <c>GET /api/exporters</c> endpoint.
+            
+            The response includes:
+            - File content (binary)
+            - Proper MIME type
+            - Content-Disposition header for file download
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Api.Controllers.QuizzesController">
+            <summary>
+            Provides CRUD operations for managing quizzes.
+            </summary>
+            <remarks>
+            Supports:
+            - Retrieving paginated quiz list
+            - Retrieving quiz details
+            - Creating quizzes (with question recycling support)
+            - Updating quizzes
+            - Deleting quizzes
+            
+            Quizzes consist of reusable questions.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.#ctor(QuizMaker.Application.Services.QuizService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Api.Controllers.QuizzesController"/> class.
+            </summary>
+            <param name="quizService">
+            Service responsible for quiz-related business logic.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.GetPaged(QuizMaker.Application.Requests.QuizPagedRequest)">
+            <summary>
+            Retrieves a paginated list of quizzes.
+            </summary>
+            <param name="request">
+            Search, paging and sorting parameters.
+            </param>
+            <returns>
+            A paged result containing quiz summaries.
+            </returns>
+            <response code="200">Returns paginated quizzes.</response>
+            <response code="400">Invalid request parameters.</response>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.GetById(System.Guid)">
+            <summary>
+            Retrieves detailed information about a specific quiz.
+            </summary>
+            <param name="id">Quiz identifier.</param>
+            <returns>
+            Quiz details including associated questions.
+            </returns>
+            <response code="200">Quiz found.</response>
+            <response code="404">Quiz not found.</response>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.Create(QuizMaker.Application.Requests.CreateQuizRequest)">
+            <summary>
+            Creates a new quiz.
+            </summary>
+            <param name="request">
+            Quiz creation data including name, existing question IDs and new questions.
+            </param>
+            <returns>
+            The identifier of the newly created quiz.
+            </returns>
+            <response code="201">Quiz created successfully.</response>
+            <response code="400">Request body is missing or invalid.</response>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.Update(System.Guid,QuizMaker.Application.Requests.UpdateQuizRequest)">
+            <summary>
+            Updates an existing quiz.
+            </summary>
+            <param name="id">Identifier of the quiz to update.</param>
+            <param name="request">Updated quiz data.</param>
+            <returns>
+            No content if update is successful.
+            </returns>
+            <response code="204">Quiz updated successfully.</response>
+            <response code="400">Request body is missing or invalid.</response>
+            <response code="404">Quiz not found.</response>
+        </member>
+        <member name="M:QuizMaker.Api.Controllers.QuizzesController.Delete(System.Guid)">
+            <summary>
+            Deletes a quiz.
+            </summary>
+            <param name="id">Identifier of the quiz to delete.</param>
+            <returns>
+            No content if deletion is successful.
+            </returns>
+            <response code="204">Quiz deleted successfully.</response>
+            <response code="404">Quiz not found.</response>
+        </member>
+        <member name="T:QuizMaker.Api.Infrastructure.ApiExceptionHandler">
+            <summary>
+            Global exception handler for the Web API.
+            </summary>
+            <remarks>
+            Intercepts unhandled exceptions thrown during request processing
+            and converts them into consistent HTTP responses.
+            
+            Maps:
+            - <see cref="T:QuizMaker.Application.Exceptions.EntityNotFoundException"/> to 404 (Not Found)
+            - <see cref="T:QuizMaker.Application.Exceptions.ExporterNotFoundException"/> to 404 (Not Found)
+            - <see cref="T:QuizMaker.Application.Exceptions.MissingArgumentException"/> to 400 (Bad Request)
+            - All other exceptions to 500 (Internal Server Error)
+            
+            Ensures that internal exception details are not exposed to clients.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Api.Infrastructure.ApiExceptionHandler.Handle(System.Web.Http.ExceptionHandling.ExceptionHandlerContext)">
+            <summary>
+            Handles unhandled exceptions and transforms them into HTTP responses.
+            </summary>
+            <param name="context">
+            Context containing the thrown exception and HTTP request details.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Api.Infrastructure.ApiExceptionHandler.Error(System.Web.Http.ExceptionHandling.ExceptionHandlerContext,System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Creates a standardized error response.
+            </summary>
+            <param name="ctx">Exception handling context.</param>
+            <param name="code">HTTP status code to return.</param>
+            <param name="message">Error message to include in response body.</param>
+            <returns>An HTTP action result containing error payload.</returns>
+        </member>
+        <member name="T:QuizMaker.Global">
+            <summary>
+            Global configuration
+            </summary>
+        </member>
+        <member name="M:QuizMaker.Global.Application_Start(System.Object,System.EventArgs)">
+            <summary>
+            Application Start configuration
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+    </members>
+</doc>

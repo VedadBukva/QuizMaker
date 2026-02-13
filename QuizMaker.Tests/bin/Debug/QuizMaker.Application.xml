@@ -1,0 +1,655 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuizMaker.Application</name>
+    </assembly>
+    <members>
+        <member name="T:QuizMaker.Application.Common.PagedResultDto`1">
+            <summary>
+            Represents a paged response returned from the API.
+            </summary>
+            <typeparam name="T">
+            Type of items contained in the result set.
+            </typeparam>
+            <remarks>
+            This object contains pagination metadata along with the requested data page.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Common.PagedResultDto`1.Items">
+            <summary>
+            Collection of items for the current page.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Common.PagedResultDto`1.TotalCount">
+            <summary>
+            Total number of items available for the given query.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Common.PagedResultDto`1.Page">
+            <summary>
+            Current page number (starts from 1).
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Common.PagedResultDto`1.PageSize">
+            <summary>
+            Number of items returned per page.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Common.PagedResultDto`1.TotalPages">
+            <summary>
+            Total number of pages calculated based on <see cref="P:QuizMaker.Application.Common.PagedResultDto`1.TotalCount"/> and <see cref="P:QuizMaker.Application.Common.PagedResultDto`1.PageSize"/>.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Application.Dtos.QuestionListItemDto">
+            <summary>
+            Represents a lightweight view of a question.
+            </summary>
+            <remarks>
+            This DTO is typically used in list or search results where 
+            full question details are not required.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuestionListItemDto.Id">
+            <summary>
+            Unique identifier of the question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuestionListItemDto.Text">
+            <summary>
+            Text content of the question.
+            </summary>
+            <remarks>
+            Does not include the correct answer.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuestionListItemDto.CreatedAtUtc">
+            <summary>
+            UTC date and time when the question was created.
+            </summary>
+            <remarks>
+            Stored in Coordinated Universal Time (UTC).
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Dtos.QuizDetailsDto">
+            <summary>
+            Represents detailed information about a quiz.
+            </summary>
+            <remarks>
+            This DTO is returned when retrieving a single quiz,
+            including all associated questions.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizDetailsDto.Id">
+            <summary>
+            Unique identifier of the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizDetailsDto.Name">
+            <summary>
+            Name of the quiz.
+            </summary>
+            <remarks>
+            The name is defined by the user during quiz creation or update.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizDetailsDto.Questions">
+            <summary>
+            Collection of questions that belong to the quiz.
+            </summary>
+            <remarks>
+            Questions are typically returned in the defined display order.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Dtos.QuizListItemDto">
+            <summary>
+            Represents a lightweight view of a quiz used in list responses.
+            </summary>
+            <remarks>
+            This DTO is typically returned when retrieving a paged list of quizzes.
+            It does not include full question details.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizListItemDto.Id">
+            <summary>
+            Unique identifier of the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizListItemDto.Name">
+            <summary>
+            Name of the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizListItemDto.QuestionCount">
+            <summary>
+            Total number of questions associated with the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizListItemDto.CreatedAtUtc">
+            <summary>
+            UTC date and time when the quiz was created.
+            </summary>
+            <remarks>
+            Stored in Coordinated Universal Time (UTC).
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Dtos.QuizQuestionDto">
+            <summary>
+            Represents a question that belongs to a quiz.
+            </summary>
+            <remarks>
+            This DTO contains both the question text and its correct answer.
+            It is typically returned when retrieving detailed quiz information.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizQuestionDto.Id">
+            <summary>
+            Unique identifier of the question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizQuestionDto.Text">
+            <summary>
+            Text content of the question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Dtos.QuizQuestionDto.CorrectAnswer">
+            <summary>
+            Correct answer for the question.
+            </summary>
+            <remarks>
+            This value is used for quiz validation purposes and is not included in export formats intended for participants.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Exceptions.EntityNotFoundException">
+            <summary>
+            Exception thrown when a requested entity cannot be found in the system.
+            </summary>
+            <remarks>
+            This exception is typically used in the application layer when an entity
+            with a specific identifier does not exist in the data store.
+            It is commonly mapped to an HTTP 404 (Not Found) response.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Exceptions.EntityNotFoundException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Exceptions.EntityNotFoundException"/> class.
+            </summary>
+            <param name="entity">Name of the entity type.</param>
+            <param name="key">Identifier value used to search for the entity.</param>
+        </member>
+        <member name="P:QuizMaker.Application.Exceptions.EntityNotFoundException.Entity">
+            <summary>
+            Gets the name of the entity that was not found.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Exceptions.EntityNotFoundException.Key">
+            <summary>
+            Gets the identifier value used in the lookup.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Application.Exceptions.MissingArgumentException">
+            <summary>
+            Exception thrown when a required argument is missing.
+            </summary>
+            <remarks>
+            Typically mapped to an HTTP 400 (Bad Request) response.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Exceptions.MissingArgumentException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Exceptions.MissingArgumentException"/> class.
+            </summary>
+            <param name="message">Description of the missing argument error.</param>
+            <param name="paramName">Name of the missing parameter.</param>
+        </member>
+        <member name="T:QuizMaker.Application.Exceptions.ExporterNotFoundException">
+            <summary>
+            Exception thrown when a requested exporter cannot be found.
+            </summary>
+            <remarks>
+            This exception is typically raised when the provided exporter key
+            does not match any registered exporter implementation.
+            It is commonly mapped to an HTTP 400 (Bad Request) or 404 (Not Found) response,
+            depending on API design decisions.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Exceptions.ExporterNotFoundException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Exceptions.ExporterNotFoundException"/> class.
+            </summary>
+            <param name="key">The exporter key that was requested.</param>
+        </member>
+        <member name="P:QuizMaker.Application.Exceptions.ExporterNotFoundException.Key">
+            <summary>
+            Gets the exporter key that could not be resolved.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Application.Requests.CreateQuizRequest">
+            <summary>
+            Represents the request model used to create a new quiz.
+            </summary>
+            <remarks>
+            A quiz can consist of:
+            - Existing questions (referenced by their identifiers),
+            - Newly created questions,
+            - Or a combination of both.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.CreateQuizRequest.Name">
+            <summary>
+            Name of the quiz.
+            </summary>
+            <remarks>
+            This value is required and should be unique within the system.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.CreateQuizRequest.ExistingQuestionIds">
+            <summary>
+            Collection of identifiers of existing questions to be reused in the new quiz.
+            </summary>
+            <remarks>
+            This enables "question recycling", allowing previously created questions
+            to be included in the new quiz.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.CreateQuizRequest.NewQuestions">
+            <summary>
+            Collection of new questions to be created and added to the quiz.
+            </summary>
+            <remarks>
+            Each question must include question text and correct answer.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Requests.NewQuestionRequest">
+            <summary>
+            Represents a request model for creating a new question.
+            </summary>
+            <remarks>
+            This model is used when adding new questions while creating or updating a quiz.
+            Both the question text and the correct answer are required.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.NewQuestionRequest.Text">
+            <summary>
+            Text content of the question.
+            </summary>
+            <remarks>
+            Must not be empty. The text should clearly describe the question.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.NewQuestionRequest.CorrectAnswer">
+            <summary>
+            Correct answer to the question.
+            </summary>
+            <remarks>
+            This value is stored internally and is not included in participant exports.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Requests.QuestionPagedRequest">
+            <summary>
+            Represents query parameters used for searching and paginating questions.
+            </summary>
+            <remarks>
+            This request model supports text-based search and standard pagination.
+            It is typically used when selecting existing questions for quiz creation.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuestionPagedRequest.Search">
+            <summary>
+            Text used to search questions by their content.
+            </summary>
+            <remarks>
+            Performs a case-insensitive search against the question text.
+            If null or empty, all questions are returned.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuestionPagedRequest.Page">
+            <summary>
+            Page number to retrieve (starts from 1).
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuestionPagedRequest.PageSize">
+            <summary>
+            Number of items to return per page.
+            </summary>
+            <remarks>
+            Default value is 50. The API may enforce a maximum limit.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Requests.QuizPagedRequest">
+            <summary>
+            Represents query parameters used for searching and paginating quizzes.
+            </summary>
+            <remarks>
+            This request model supports text-based search and standard pagination.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuizPagedRequest.Search">
+            <summary>
+            Text used to search quiz by name.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuizPagedRequest.Page">
+            <summary>
+            Page number (starts from 1).
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuizPagedRequest.PageSize">
+            <summary>
+            Number of items per page (default 50).
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.QuizPagedRequest.SortOrder">
+            <summary>
+            Defines sorting direction by quiz name. Allowed values: Asc or Desc.
+            Default: Desc.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Application.Requests.UpdateQuizRequest">
+            <summary>
+            Represents the request model used to update an existing quiz.
+            </summary>
+            <remarks>
+            Allows updating the quiz name and redefining the set of questions
+            that belong to the quiz.
+            
+            The quiz can consist of:
+            - Existing questions (referenced by their identifiers),
+            - Newly created questions,
+            - Or a combination of both.
+            
+            Questions not included in the request will be removed from the quiz,
+            but will remain stored in the system for future reuse.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.UpdateQuizRequest.Name">
+            <summary>
+            Updated name of the quiz.
+            </summary>
+            <remarks>
+            If provided, replaces the existing quiz name.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.UpdateQuizRequest.ExistingQuestionIds">
+            <summary>
+            Collection of identifiers of existing questions to associate with the quiz.
+            </summary>
+            <remarks>
+            Enables reusing previously created questions.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Application.Requests.UpdateQuizRequest.NewQuestions">
+            <summary>
+            Collection of new questions to be created and added to the quiz.
+            </summary>
+            <remarks>
+            Each question must include question text and correct answer.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Services.ExporterService">
+            <summary>
+            Service responsible for providing information about available quiz exporters.
+            </summary>
+            <remarks>
+            This service retrieves exporter metadata from the underlying exporter catalog.
+            Exporters are dynamically discovered using MEF and exposed to clients
+            so they can select a desired export format.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.ExporterService.#ctor(QuizMaker.Domain.Export.IExporterCatalog)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Services.ExporterService"/> class.
+            </summary>
+            <param name="catalog">
+            Catalog used to retrieve dynamically registered exporters.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Application.Services.ExporterService.GetAll">
+            <summary>
+            Retrieves all currently available exporters.
+            </summary>
+            <returns>
+            A list of exporter metadata objects describing supported export formats.
+            </returns>
+            <remarks>
+            The returned data includes exporter key, display name, file extension,
+            and MIME type. The key must be used when invoking the quiz export endpoint.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Services.QuestionService">
+            <summary>
+            Service responsible for managing question-related operations.
+            </summary>
+            <remarks>
+            Provides functionality for searching and retrieving questions
+            with pagination support. Acts as an application layer abstraction
+            over the question repository.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuestionService.#ctor(QuizMaker.Domain.Interfaces.IQuestionRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Services.QuestionService"/> class.
+            </summary>
+            <param name="questionRepository">
+            Repository used for accessing question data.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuestionService.SearchPagedAsync(QuizMaker.Application.Requests.QuestionPagedRequest)">
+            <summary>
+            Searches questions using optional text filtering and pagination.
+            </summary>
+            <param name="request">
+            Search and pagination parameters.
+            </param>
+            <returns>
+            A paged result containing lightweight question representations.
+            </returns>
+            <remarks>
+            If no search term is provided, all questions are returned in a paged format.
+            Pagination defaults to page 1 and page size 50 if not specified.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Services.QuizExportService">
+            <summary>
+            Service responsible for exporting quizzes to various file formats.
+            </summary>
+            <remarks>
+            This service retrieves the requested quiz and delegates the export process
+            to a dynamically discovered exporter implementation.
+            Exporters are resolved via the exporter catalog (MEF-based).
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizExportService.#ctor(QuizMaker.Domain.Interfaces.IQuizRepository,QuizMaker.Domain.Export.IExporterCatalog)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Services.QuizExportService"/> class.
+            </summary>
+            <param name="quizRepository">
+            Repository used to retrieve quiz data including associated questions.
+            </param>
+            <param name="catalog">
+            Catalog responsible for resolving available exporters.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizExportService.ExportAsync(System.Guid,System.String)">
+            <summary>
+            Exports the specified quiz using the requested exporter.
+            </summary>
+            <param name="quizId">
+            Unique identifier of the quiz to export.
+            </param>
+            <param name="exporterKey">
+            Key identifying the exporter to use (e.g., "csv", "pdf", "txt").
+            </param>
+            <returns>
+            An <see cref="T:QuizMaker.Domain.Export.ExportResult"/> containing file content, file name, and MIME type.
+            </returns>
+            <exception cref="T:QuizMaker.Application.Exceptions.MissingArgumentException">
+            Thrown when <paramref name="quizId"/> is empty or <paramref name="exporterKey"/> is not provided.
+            </exception>
+            <exception cref="T:QuizMaker.Application.Exceptions.ExporterNotFoundException">
+            Thrown when no exporter is registered for the specified key.
+            </exception>
+            <exception cref="T:QuizMaker.Application.Exceptions.EntityNotFoundException">
+            Thrown when the quiz with the specified identifier does not exist.
+            </exception>
+            <remarks>
+            The quiz is retrieved along with its associated questions.
+            The exporter is responsible for generating the file content and metadata.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Application.Services.QuizService">
+            <summary>
+            Service responsible for managing quiz lifecycle operations.
+            </summary>
+            <remarks>
+            Provides functionality for creating, updating, retrieving, deleting, 
+            and paginating quizzes. 
+            
+            Handles business rules such as:
+            - Question recycling
+            - Display order management
+            - Soft deletion
+            - Mapping domain entities to DTOs
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.#ctor(QuizMaker.Domain.Interfaces.IQuizRepository,QuizMaker.Domain.Interfaces.IQuestionRepository,QuizMaker.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Application.Services.QuizService"/> class.
+            </summary>
+            <param name="quizRepository">Repository for quiz data access.</param>
+            <param name="questionRepository">Repository for question data access.</param>
+            <param name="unitOfWork">Unit of work used to persist changes.</param>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.GetPagedAsync(QuizMaker.Application.Requests.QuizPagedRequest)">
+            <summary>
+            Retrieves paginated list of quizzes.
+            </summary>
+            <param name="request">Search, paging and sorting parameters.</param>
+            <returns>
+            A paged result containing lightweight quiz representations.
+            </returns>
+            <remarks>
+            Supports:
+            - Text-based search by quiz name
+            - Pagination
+            - Sorting by creation date
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.GetByIdAsync(System.Guid)">
+            <summary>
+            Retrieves detailed information about a specific quiz.
+            </summary>
+            <param name="id">Unique identifier of the quiz.</param>
+            <returns>
+            Detailed quiz information including ordered questions.
+            Returns null if the quiz does not exist.
+            </returns>
+            <remarks>
+            Questions are returned in their defined display order.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.CreateAsync(QuizMaker.Application.Requests.CreateQuizRequest)">
+            <summary>
+            Creates a new quiz.
+            </summary>
+            <param name="request">
+            Data required to create the quiz, including:
+            - Quiz name
+            - Existing question identifiers
+            - Newly created questions
+            </param>
+            <returns>The unique identifier of the newly created quiz.</returns>
+            <exception cref="T:QuizMaker.Application.Exceptions.MissingArgumentException">
+            Thrown when the request model is null.
+            </exception>
+            <remarks>
+            Supports question recycling by linking existing questions.
+            Newly created questions are persisted before associating them with the quiz.
+            Display order is automatically assigned based on insertion order.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.UpdateAsync(System.Guid,QuizMaker.Application.Requests.UpdateQuizRequest)">
+            <summary>
+            Updates an existing quiz.
+            </summary>
+            <param name="id">Identifier of the quiz to update.</param>
+            <param name="request">
+            Updated quiz data including:
+            - New quiz name
+            - Existing question identifiers
+            - Newly created questions
+            </param>
+            <returns>
+            True if the update was successful.
+            </returns>
+            <exception cref="T:QuizMaker.Application.Exceptions.MissingArgumentException">
+            Thrown when the request model is null.
+            </exception>
+            <exception cref="T:QuizMaker.Application.Exceptions.EntityNotFoundException">
+            Thrown when the quiz does not exist.
+            </exception>
+            <remarks>
+            Existing quiz-question relationships are cleared and rebuilt.
+            Questions remain stored in the system even if removed from the quiz.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Application.Services.QuizService.DeleteAsync(System.Guid)">
+            <summary>
+            Deletes a quiz.
+            </summary>
+            <param name="id">Identifier of the quiz to delete.</param>
+            <returns>True if deletion was successful.</returns>
+            <exception cref="T:QuizMaker.Application.Exceptions.EntityNotFoundException">
+            Thrown when the quiz does not exist.
+            </exception>
+            <remarks>
+            Deleting a quiz does not remove associated questions from the system.
+            </remarks>
+        </member>
+        <member name="T:ExporterDto">
+            <summary>
+            Represents metadata describing an available quiz exporter.
+            </summary>
+            <remarks>
+            This DTO is returned by the API to inform clients which export formats 
+            are currently supported by the system.
+            </remarks>
+        </member>
+        <member name="P:ExporterDto.Key">
+            <summary>
+            Unique identifier of the exporter.
+            </summary>
+            <remarks>
+            This value must be provided as the <c>exporter</c> query parameter 
+            when calling the quiz export endpoint.
+            Example: "csv", "pdf", "txt".
+            </remarks>
+        </member>
+        <member name="P:ExporterDto.DisplayName">
+            <summary>
+            Human-readable name of the exporter.
+            </summary>
+            <remarks>
+            Intended for display purposes in the UI.
+            Example: "CSV", "PDF", "Plain Text".
+            </remarks>
+        </member>
+        <member name="P:ExporterDto.FileExtension">
+            <summary>
+            File extension produced by the exporter.
+            </summary>
+            <remarks>
+            Does not include the leading dot.
+            Example: "csv", "pdf", "txt".
+            </remarks>
+        </member>
+        <member name="P:ExporterDto.MimeType">
+            <summary>
+            MIME type associated with the exported file.
+            </summary>
+            <remarks>
+            Used to correctly set the <c>Content-Type</c> header in the response.
+            Example: "text/csv", "application/pdf".
+            </remarks>
+        </member>
+    </members>
+</doc>

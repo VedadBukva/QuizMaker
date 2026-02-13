@@ -1,0 +1,598 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuizMaker.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:QuizMaker.Domain.Entities.Helpers.BaseEntity">
+            <summary>
+            Base class for all domain entities.
+            </summary>
+            <remarks>
+            Provides common audit and lifecycle properties shared across entities,
+            including soft deletion and timestamp tracking.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Helpers.BaseEntity.IsDeleted">
+            <summary>
+            Indicates whether the entity has been soft-deleted.
+            </summary>
+            <remarks>
+            Soft-deleted entities remain stored in the database
+            but should be excluded from active queries.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Helpers.BaseEntity.DeletedAtUtc">
+            <summary>
+            UTC date and time when the entity was soft-deleted.
+            </summary>
+            <remarks>
+            Null if the entity has not been deleted.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Helpers.BaseEntity.CreatedAtUtc">
+            <summary>
+            UTC date and time when the entity was created.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Helpers.BaseEntity.UpdatedAtUtc">
+            <summary>
+            UTC date and time when the entity was last updated.
+            </summary>
+            <remarks>
+            Null if the entity has never been updated.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Domain.Entities.Quiz">
+            <summary>
+            Represents a quiz consisting of multiple questions.
+            </summary>
+            <remarks>
+            A quiz is identified by a unique name and contains an ordered collection
+            of questions defined through the <see cref="T:QuizMaker.Domain.Entities.QuizQuestion"/> join entity.
+            
+            Questions can be reused across multiple quizzes.
+            
+            Inherits audit and soft-delete properties from <see cref="T:QuizMaker.Domain.Entities.Helpers.BaseEntity"/>.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Quiz.Id">
+            <summary>
+            Unique identifier of the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Quiz.Name">
+            <summary>
+            Name of the quiz.
+            </summary>
+            <remarks>
+            Defined during quiz creation and can be updated later.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Quiz.QuizQuestions">
+            <summary>
+            Navigation property representing questions included in the quiz.
+            </summary>
+            <remarks>
+            The relationship is managed via the <see cref="T:QuizMaker.Domain.Entities.QuizQuestion"/> entity,
+            which preserves question order using a display index.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Domain.Entities.Question">
+            <summary>
+            Represents a quiz question stored in the system.
+            </summary>
+            <remarks>
+            A question consists of textual content and a correct answer.
+            
+            Questions can be reused across multiple quizzes through
+            the <see cref="T:QuizMaker.Domain.Entities.QuizQuestion"/> relationship entity.
+            
+            Inherits audit and soft-delete properties from <see cref="T:QuizMaker.Domain.Entities.Helpers.BaseEntity"/>.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Question.Id">
+            <summary>
+            Unique identifier of the question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Question.Text">
+            <summary>
+            Text content of the question.
+            </summary>
+            <remarks>
+            This represents the visible question presented to participants.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Question.CorrectAnswer">
+            <summary>
+            Correct answer for the question.
+            </summary>
+            <remarks>
+            Stored internally and not included in participant-facing exports.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.Question.QuizQuestions">
+            <summary>
+            Navigation property representing quizzes that include this question.
+            </summary>
+            <remarks>
+            Implemented through a many-to-many relationship using the 
+            <see cref="T:QuizMaker.Domain.Entities.QuizQuestion"/> join entity.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Domain.Entities.QuizQuestion">
+            <summary>
+            Represents the relationship between a <see cref="P:QuizMaker.Domain.Entities.QuizQuestion.Quiz"/> and a <see cref="P:QuizMaker.Domain.Entities.QuizQuestion.Question"/>.
+            </summary>
+            <remarks>
+            This entity acts as a join table in a many-to-many relationship
+            while also preserving the display order of questions within a quiz.
+            
+            Each record defines:
+            - Which question belongs to which quiz
+            - The order in which the question appears
+            
+            Inherits audit and soft-delete properties from <see cref="T:QuizMaker.Domain.Entities.Helpers.BaseEntity"/>.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.QuizQuestion.QuizId">
+            <summary>
+            Identifier of the quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.QuizQuestion.QuestionId">
+            <summary>
+            Identifier of the associated question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.QuizQuestion.Quiz">
+            <summary>
+            Navigation property to the related quiz.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.QuizQuestion.Question">
+            <summary>
+            Navigation property to the related question.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Entities.QuizQuestion.DisplayOrder">
+            <summary>
+            Determines the position of the question within the quiz.
+            </summary>
+            <remarks>
+            Questions are displayed in ascending order based on this value.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Domain.Enums.SortOrder">
+            <summary>
+            Defines sorting direction for paginated queries.
+            </summary>
+            <remarks>
+            Used when retrieving paged results to determine
+            whether data should be sorted in ascending or descending order.
+            </remarks>
+        </member>
+        <member name="F:QuizMaker.Domain.Enums.SortOrder.Asc">
+            <summary>
+            Sort results in ascending order.
+            </summary>
+        </member>
+        <member name="F:QuizMaker.Domain.Enums.SortOrder.Desc">
+            <summary>
+            Sort results in descending order.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Domain.Export.ExporterInfo">
+            <summary>
+            Represents metadata describing a quiz exporter.
+            </summary>
+            <remarks>
+            Contains descriptive information about an exporter implementation
+            such as its unique key, display name, file extension and MIME type.
+            
+            Instances of this class are typically created based on MEF metadata
+            and exposed through the API to inform clients about available export formats.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Export.ExporterInfo.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Domain.Export.ExporterInfo"/> class.
+            </summary>
+            <param name="key">
+            Unique identifier of the exporter (e.g., "csv", "txt", "pdf").
+            </param>
+            <param name="displayName">
+            Human-readable name of the exporter.
+            </param>
+            <param name="fileExtension">
+            File extension associated with the exported format.
+            </param>
+            <param name="mimeType">
+            MIME type used in HTTP responses for the exported file.
+            </param>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExporterInfo.Key">
+            <summary>
+            Unique exporter key used when requesting export.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExporterInfo.DisplayName">
+            <summary>
+            Display name shown to clients.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExporterInfo.FileExtension">
+            <summary>
+            File extension of the exported file.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExporterInfo.MimeType">
+            <summary>
+            MIME type used in the HTTP response.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Domain.Export.ExportResult">
+            <summary>
+            Represents the result of a quiz export operation.
+            </summary>
+            <remarks>
+            Encapsulates the generated file content along with its
+            file name and MIME type, which are used to construct
+            an HTTP response for file download.
+            
+            Designed as an immutable value object.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Export.ExportResult.#ctor(System.Byte[],System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Domain.Export.ExportResult"/> class.
+            </summary>
+            <param name="content">
+            Binary content of the exported file.
+            If null, an empty byte array will be used.
+            </param>
+            <param name="fileName">
+            Name of the exported file.
+            Defaults to "export" if null or empty.
+            </param>
+            <param name="mimeType">
+            MIME type of the exported file.
+            Defaults to "application/octet-stream" if null or empty.
+            </param>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExportResult.Content">
+            <summary>
+            Binary content of the exported file.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExportResult.FileName">
+            <summary>
+            File name used in the Content-Disposition header.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.ExportResult.MimeType">
+            <summary>
+            MIME type used in the HTTP response.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Domain.Export.IExporterCatalog">
+            <summary>
+            Provides access to available quiz exporters.
+            </summary>
+            <remarks>
+            Responsible for discovering and exposing exporter implementations,
+            typically loaded dynamically using MEF (Managed Extensibility Framework).
+            
+            Allows:
+            - Retrieving metadata for all available exporters
+            - Resolving a specific exporter by its unique key
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Export.IExporterCatalog.GetAll">
+            <summary>
+            Retrieves metadata for all available exporters.
+            </summary>
+            <returns>
+            A collection of <see cref="T:QuizMaker.Domain.Export.ExporterInfo"/> describing
+            all dynamically loaded exporters.
+            </returns>
+        </member>
+        <member name="M:QuizMaker.Domain.Export.IExporterCatalog.GetByKey(System.String)">
+            <summary>
+            Retrieves an exporter implementation by its unique key.
+            </summary>
+            <param name="key">
+            Unique exporter identifier (e.g., "csv", "txt", "pdf").
+            </param>
+            <returns>
+            An instance of <see cref="T:QuizMaker.Domain.Export.IQuizExporter"/> if found;
+            otherwise null.
+            </returns>
+        </member>
+        <member name="T:QuizMaker.Domain.Export.IQuizExporter">
+            <summary>
+            Defines a contract for exporting quizzes into various file formats.
+            </summary>
+            <remarks>
+            Implementations of this interface are responsible for generating
+            file content for a given <see cref="T:QuizMaker.Domain.Entities.Quiz"/> in a specific format
+            (e.g., CSV, TXT, PDF).
+            
+            Exporters are dynamically discovered using MEF and resolved
+            through the <see cref="T:QuizMaker.Domain.Export.IExporterCatalog"/>.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Export.IQuizExporter.Export(QuizMaker.Domain.Entities.Quiz)">
+            <summary>
+            Generates an export file for the specified quiz.
+            </summary>
+            <param name="quiz">
+            The quiz to export.
+            </param>
+            <returns>
+            An <see cref="T:QuizMaker.Domain.Export.ExportResult"/> containing the file content,
+            file name and MIME type.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if the provided quiz is null.
+            </exception>
+        </member>
+        <member name="T:QuizMaker.Domain.Export.IQuizExporterMetadata">
+            <summary>
+            Defines metadata associated with a quiz exporter implementation.
+            </summary>
+            <remarks>
+            Used by MEF (Managed Extensibility Framework) to describe
+            exporter characteristics without instantiating the exporter itself.
+            
+            This metadata is typically applied via <c>ExportMetadata</c>
+            attributes and consumed by <see cref="T:QuizMaker.Domain.Export.IExporterCatalog"/>.
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.IQuizExporterMetadata.Key">
+            <summary>
+            Unique key identifying the exporter.
+            </summary>
+            <remarks>
+            Used by clients when requesting export (e.g., "csv", "txt", "pdf").
+            </remarks>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.IQuizExporterMetadata.DisplayName">
+            <summary>
+            Human-readable display name of the exporter.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.IQuizExporterMetadata.FileExtension">
+            <summary>
+            File extension associated with the exported format.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Export.IQuizExporterMetadata.MimeType">
+            <summary>
+            MIME type used when returning the exported file.
+            </summary>
+        </member>
+        <member name="T:QuizMaker.Domain.Interfaces.IQuestionRepository">
+            <summary>
+            Defines data access operations for <see cref="T:QuizMaker.Domain.Entities.Question"/> entities.
+            </summary>
+            <remarks>
+            Provides querying and persistence operations for quiz questions.
+            Typically used when creating or updating quizzes,
+            especially for question recycling scenarios.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuestionRepository.SearchPagedAsync(System.String,System.Int32,System.Int32)">
+            <summary>
+            Searches questions with pagination support.
+            </summary>
+            <param name="search">
+            Optional text used to filter questions by their content.
+            </param>
+            <param name="page">
+            Page number (starting from 1).
+            </param>
+            <param name="pageSize">
+            Number of items per page.
+            </param>
+            <returns>
+            A paged result containing matching questions.
+            </returns>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuestionRepository.GetByIdsAsync(System.Collections.Generic.IReadOnlyCollection{System.Guid})">
+            <summary>
+            Retrieves questions by their identifiers.
+            </summary>
+            <param name="ids">
+            Collection of question identifiers.
+            </param>
+            <returns>
+            A collection of matching questions.
+            </returns>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuestionRepository.AddRangeAsync(System.Collections.Generic.IEnumerable{QuizMaker.Domain.Entities.Question})">
+            <summary>
+            Adds multiple questions to the data store.
+            </summary>
+            <param name="questions">
+            Collection of questions to add.
+            </param>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuestionRepository.AddAsync(QuizMaker.Domain.Entities.Question)">
+            <summary>
+            Adds a single question to the data store.
+            </summary>
+            <param name="question">
+            Question to add.
+            </param>
+        </member>
+        <member name="T:QuizMaker.Domain.Interfaces.IQuizRepository">
+            <summary>
+            Defines data access operations for <see cref="T:QuizMaker.Domain.Entities.Quiz"/> entities.
+            </summary>
+            <remarks>
+            Provides querying and persistence operations for quizzes, including:
+            - Retrieving paged quiz lists (without loading question details)
+            - Retrieving a single quiz with its associated questions
+            - Creating, updating, and deleting quizzes
+            
+            Questions are associated with quizzes through the <see cref="T:QuizMaker.Domain.Entities.QuizQuestion"/> join entity.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuizRepository.GetPagedAsync(System.String,System.Int32,System.Int32,QuizMaker.Domain.Enums.SortOrder)">
+            <summary>
+            Retrieves a paginated list of quizzes.
+            </summary>
+            <param name="search">
+            Optional text used to filter quizzes by name.
+            </param>
+            <param name="page">
+            Page number (starting from 1).
+            </param>
+            <param name="pageSize">
+            Number of items per page.
+            </param>
+            <param name="sortOrder">
+            Sort direction applied to the results.
+            </param>
+            <returns>
+            A paged result containing matching quizzes.
+            </returns>
+            <remarks>
+            This method is intended for list views and should avoid loading full question details
+            for performance reasons.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuizRepository.GetByIdWithQuestionsAsync(System.Guid)">
+            <summary>
+            Retrieves a quiz by its identifier including associated questions.
+            </summary>
+            <param name="id">Quiz identifier.</param>
+            <returns>
+            A quiz including its associated questions if found; otherwise null.
+            </returns>
+            <remarks>
+            Intended for quiz detail view and export operations where full question data is required.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuizRepository.AddAsync(QuizMaker.Domain.Entities.Quiz)">
+            <summary>
+            Adds a new quiz to the data store.
+            </summary>
+            <param name="quiz">Quiz to add.</param>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuizRepository.DeleteAsync(System.Guid)">
+            <summary>
+            Deletes a quiz identified by the specified identifier.
+            </summary>
+            <param name="id">Quiz identifier.</param>
+            <remarks>
+            Deleting a quiz should not delete the associated questions, only the quiz entity itself
+            (typically via soft delete).
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IQuizRepository.UpdateAsync(QuizMaker.Domain.Entities.Quiz)">
+            <summary>
+            Updates an existing quiz in the data store.
+            </summary>
+            <param name="quiz">Quiz entity with updated values.</param>
+        </member>
+        <member name="T:QuizMaker.Domain.Interfaces.IUnitOfWork">
+            <summary>
+            Defines a unit of work abstraction for coordinating data persistence.
+            </summary>
+            <remarks>
+            Ensures that multiple repository operations are committed
+            as a single transactional operation.
+            
+            Typically implemented using Entity Framework DbContext.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Interfaces.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            Persists all changes made within the current unit of work.
+            </summary>
+            <returns>
+            The number of state entries written to the underlying data store.
+            </returns>
+            <remarks>
+            All tracked changes across repositories are committed in a single transaction.
+            </remarks>
+        </member>
+        <member name="T:QuizMaker.Domain.Paging.PagedResult`1">
+            <summary>
+            Represents a paginated result set.
+            </summary>
+            <typeparam name="T">
+            Type of items contained in the result.
+            </typeparam>
+            <remarks>
+            Encapsulates a collection of items along with pagination metadata,
+            including total count, page information and navigation helpers.
+            </remarks>
+        </member>
+        <member name="M:QuizMaker.Domain.Paging.PagedResult`1.#ctor(System.Collections.Generic.ICollection{`0},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:QuizMaker.Domain.Paging.PagedResult`1"/> class.
+            </summary>
+            <param name="items">Items for the current page.</param>
+            <param name="totalCount">Total number of items across all pages.</param>
+            <param name="page">Current page number (minimum 1).</param>
+            <param name="pageSize">Number of items per page (minimum 1).</param>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.Items">
+            <summary>
+            Items contained in the current page.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.TotalCount">
+            <summary>
+            Total number of items across all pages.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.Page">
+            <summary>
+            Current page number.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.PageSize">
+            <summary>
+            Number of items per page.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.TotalPages">
+            <summary>
+            Total number of available pages.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.HasPreviousPage">
+            <summary>
+            Indicates whether a previous page exists.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.HasNextPage">
+            <summary>
+            Indicates whether a next page exists.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.PreviousPage">
+            <summary>
+            Gets the previous page number if available; otherwise null.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Domain.Paging.PagedResult`1.NextPage">
+            <summary>
+            Gets the next page number if available; otherwise null.
+            </summary>
+        </member>
+        <member name="M:QuizMaker.Domain.Paging.PagedResult`1.Empty(System.Int32,System.Int32)">
+            <summary>
+            Creates an empty paged result.
+            </summary>
+            <param name="page">Page number.</param>
+            <param name="pageSize">Page size.</param>
+            <returns>An empty paged result instance.</returns>
+        </member>
+    </members>
+</doc>

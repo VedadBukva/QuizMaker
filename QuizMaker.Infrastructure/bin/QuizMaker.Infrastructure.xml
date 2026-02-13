@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuizMaker.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:QuizMaker.Infrastructure.Data.QuizMakerDbContext">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Data.QuizMakerDbContext.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="P:QuizMaker.Infrastructure.Data.QuizMakerDbContext.Quizzes">
+            <summary>
+            Quiz entity.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Infrastructure.Data.QuizMakerDbContext.Questions">
+            <summary>
+            Question entity.
+            </summary>
+        </member>
+        <member name="P:QuizMaker.Infrastructure.Data.QuizMakerDbContext.QuizQuestions">
+            <summary>
+            QuizQuestions entity.
+            </summary>
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Data.QuizMakerDbContext.OnModelCreating(System.Data.Entity.DbModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:QuizMaker.Infrastructure.Export.MefExporterCatalog">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Export.MefExporterCatalog.#ctor(System.String)">
+            <summary>
+            MefExporterCatalog constructor.
+            </summary>
+            <param name="exportersFolderPath"></param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Export.MefExporterCatalog.GetAll">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Export.MefExporterCatalog.GetByKey(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Export.MefExporterCatalog.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:QuizMaker.Infrastructure.Repositories.QuestionRepository">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuestionRepository.#ctor(QuizMaker.Infrastructure.Data.QuizMakerDbContext)">
+            <summary>
+            QuestionRepository contrusctor.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuestionRepository.SearchPagedAsync(System.String,System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuestionRepository.GetByIdsAsync(System.Collections.Generic.IReadOnlyCollection{System.Guid})">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuestionRepository.AddRangeAsync(System.Collections.Generic.IEnumerable{QuizMaker.Domain.Entities.Question})">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuestionRepository.AddAsync(QuizMaker.Domain.Entities.Question)">
+            <inheritdoc />
+        </member>
+        <member name="T:QuizMaker.Infrastructure.Repositories.QuizRepository">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.#ctor(QuizMaker.Infrastructure.Data.QuizMakerDbContext)">
+            <summary>
+            QuizRepository constructor.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.GetPagedAsync(System.String,System.Int32,System.Int32,QuizMaker.Domain.Enums.SortOrder)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.GetByIdWithQuestionsAsync(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.AddAsync(QuizMaker.Domain.Entities.Quiz)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.DeleteAsync(System.Guid)">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.QuizRepository.UpdateAsync(QuizMaker.Domain.Entities.Quiz)">
+            <inheritdoc />
+        </member>
+        <member name="T:QuizMaker.Infrastructure.Repositories.UnitOfWork">
+            <inheritdoc />
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.UnitOfWork.#ctor(QuizMaker.Infrastructure.Data.QuizMakerDbContext)">
+            <summary>
+            UnitOfWork constructor.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:QuizMaker.Infrastructure.Repositories.UnitOfWork.SaveChangesAsync">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

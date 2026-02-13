@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Exporters/">
+    <Project Path="../QuizMaker.Exporters.Csv/QuizMaker.Exporters.Csv.csproj" Id="a5bcb46c-272c-445e-a470-b183b4baad6a" />
+    <Project Path="../QuizMaker.Exporters.Json/QuizMaker.Exporters.Json.csproj" Id="768ed214-bd23-4d96-a750-f7aedd1da157" />
+    <Project Path="../QuizMaker.Exporters.Txt/QuizMaker.Exporters.Txt.csproj" Id="53bd83fa-de97-48a2-a8f1-b13c14a422a6" />
+    <Project Path="../QuizMaker.Exporters.Xml/QuizMaker.Exporters.Xml.csproj" Id="eee3eb86-de10-4c4f-b0f8-794d7bd9cc67" />
+  </Folder>
+  <Project Path="../QuizMaker.Application/QuizMaker.Application.csproj" Id="821281fa-9cb3-447c-a2bd-cfc9c5053324">
+    <BuildDependency Project="../QuizMaker.Domain/QuizMaker.Domain.csproj" />
+  </Project>
+  <Project Path="../QuizMaker.Domain/QuizMaker.Domain.csproj" Id="6ccf5de5-e146-4218-a345-7fe28bbc5214" />
+  <Project Path="../QuizMaker.Infrastructure/QuizMaker.Infrastructure.csproj" Id="1c95c070-2049-49d5-bad3-e750d76c5cde">
+    <BuildDependency Project="../QuizMaker.Domain/QuizMaker.Domain.csproj" />
+  </Project>
+  <Project Path="../QuizMaker.Tests/QuizMaker.Tests.csproj" Id="0b662ad8-2efe-488e-ae28-ab84056c2ec9" />
+  <Project Path="QuizMaker.API.csproj" Id="264ab527-89f4-4365-841d-104466925e32">
+    <BuildDependency Project="../QuizMaker.Application/QuizMaker.Application.csproj" />
+    <BuildDependency Project="../QuizMaker.Domain/QuizMaker.Domain.csproj" />
+    <BuildDependency Project="../QuizMaker.Infrastructure/QuizMaker.Infrastructure.csproj" />
+  </Project>
+</Solution>

@@ -1,0 +1,2 @@
+C:\Users\vedad\source\repos\QuizMaker\obj\Debug\QuizMaker.Exporters.Xml.csproj.AssemblyReference.cache
+C:\Users\vedad\source\repos\QuizMaker\obj\Debug\QuizMaker.Exporters.Xml.csproj.CoreCompileInputs.cache
