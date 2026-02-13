@@ -20,7 +20,8 @@ The solution follows a layered architecture:
 
 - Visual Studio 2022 (or 2019)
 - .NET Framework 4.8 Developer Pack
-- SQL Server LocalDB or SQL Server Express
+- Tested with SQL Server LocalDB (MSSQLLocalDB).
+Can also run on SQL Server Express by updating the connection string.
 
 ---
 
@@ -30,8 +31,9 @@ The solution follows a layered architecture:
 2. Ensure connection string is set in `Web.config`.
 3. Open **Package Manager Console**.
 4. Set Default project to `QuizMaker.Infrastructure`.
-5. Press F5 to run the project.
-6. Swagger UI is available at:
+5. Run: **Update-Database**
+6. Press F5 to run the project.
+7. Swagger UI is available at: https://localhost:{port}/swagger
 
 
 ---
