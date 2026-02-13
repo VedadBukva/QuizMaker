@@ -89,3 +89,10 @@ Includes unit tests for:
 - Search is implemented using SQL `LIKE`. Full-text search would be recommended for large-scale systems.
 - Repository + Unit of Work pattern is used for clean separation of concerns.
 - Pagination is implemented using page/pageSize for simplicity. For very large datasets and high page numbers, keyset/continuation-token pagination would be recommended to avoid performance degradation of OFFSET paging.
+
+## 📎 Assumptions
+
+- Quiz names are not required to be globally unique.
+- Questions are reusable across multiple quizzes.
+- Deleting a quiz performs soft delete only.
+- Export includes only question text (no answers).
