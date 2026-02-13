@@ -1,9 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using QuizMaker.Application.Dtos;
+﻿using QuizMaker.Application.Dtos;
+using QuizMaker.Application.Exceptions;
 using QuizMaker.Application.Requests;
+using QuizMaker.Application.Validation;
 using QuizMaker.Domain.Interfaces;
 using QuizMaker.Domain.Paging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace QuizMaker.Application.Services
 {
@@ -45,8 +47,8 @@ namespace QuizMaker.Application.Services
         /// </remarks>
         public async Task<PagedResult<QuestionListItemDto>> SearchPagedAsync(QuestionPagedRequest request)
         {
-            var page = request?.Page ?? 1;
-            var pageSize = request?.PageSize ?? 50;
+            var page = request?.Page ?? ValidationConstants.DefaultPage;
+            var pageSize = request?.PageSize ?? ValidationConstants.DefaultPageSize;
             var search = request?.Search;
 
             var pagedResult = await _questionRepository.SearchPagedAsync(search, page, pageSize);

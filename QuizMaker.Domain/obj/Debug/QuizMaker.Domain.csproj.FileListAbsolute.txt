@@ -5,3 +5,10 @@ C:\Users\vedad\source\repos\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.csproj.A
 C:\Users\vedad\source\repos\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.csproj.CoreCompileInputs.cache
 C:\Users\vedad\source\repos\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.dll
 C:\Users\vedad\source\repos\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.pdb
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\bin\QuizMaker.Domain.xml
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\bin\QuizMaker.Domain.dll
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\bin\QuizMaker.Domain.pdb
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.csproj.AssemblyReference.cache
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.csproj.CoreCompileInputs.cache
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.dll
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Domain\obj\Debug\QuizMaker.Domain.pdb

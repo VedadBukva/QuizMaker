@@ -1,4 +1,6 @@
-﻿using QuizMaker.Domain.Enums;
+﻿using QuizMaker.Application.Validation;
+using QuizMaker.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizMaker.Application.Requests
 {
@@ -18,11 +20,13 @@ namespace QuizMaker.Application.Requests
         /// <summary>
         /// Page number (starts from 1).
         /// </summary>
+        [Range(ValidationConstants.DefaultPage, int.MaxValue)]
         public int Page { get; set; } = 1;
 
         /// <summary>
         /// Number of items per page (default 50).
         /// </summary>
+        [Range(ValidationConstants.DefaultPageSize, ValidationConstants.MaxPageSize)]
         public int PageSize { get; set; } = 50;
 
         /// <summary>

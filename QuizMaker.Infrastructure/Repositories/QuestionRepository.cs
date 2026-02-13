@@ -34,7 +34,7 @@ namespace QuizMaker.Infrastructure.Repositories
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(q => q.Text.Contains(search));
+                query = query.Where(q => q.Text.Contains(search) || q.CorrectAnswer.Contains(search));
             }
 
             var totalCount = await query.CountAsync();

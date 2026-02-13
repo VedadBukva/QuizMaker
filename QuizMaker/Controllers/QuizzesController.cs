@@ -87,6 +87,9 @@ namespace QuizMaker.Api.Controllers
         [Route("")]
         public async Task<IHttpActionResult> Create([FromBody] CreateQuizRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var id = await _quizService.CreateAsync(request);
             return Created($"/api/quizzes/{id}", new { id });
         }

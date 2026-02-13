@@ -1,12 +1,12 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\vedad\\source\\repos\\QuizMaker\\",
+  "WorkspaceRootPath": "C:\\Users\\vedad\\Dev\\QuizMaker\\QuizMaker\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1C95C070-2049-49D5-BAD3-E750D76C5CDE}|..\\QuizMaker.Infrastructure\\QuizMaker.Infrastructure.csproj|c:\\users\\vedad\\source\\repos\\quizmaker.infrastructure\\data\\migrations\\202602131247087_addedindexes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{821281FA-9CB3-447C-A2BD-CFC9C5053324}|..\\QuizMaker.Application\\QuizMaker.Application.csproj|c:\\users\\vedad\\dev\\quizmaker\\quizmaker.application\\services\\questionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1C95C070-2049-49D5-BAD3-E750D76C5CDE}|..\\QuizMaker.Infrastructure\\QuizMaker.Infrastructure.csproj|c:\\users\\vedad\\source\\repos\\quizmaker.infrastructure\\data\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{821281FA-9CB3-447C-A2BD-CFC9C5053324}|..\\QuizMaker.Application\\QuizMaker.Application.csproj|c:\\users\\vedad\\dev\\quizmaker\\quizmaker.application\\validation\\validationconstants.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -16,32 +16,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "202602131247087_AddedIndexes.cs",
-              "DocumentMoniker": "C:\\Users\\vedad\\source\\repos\\QuizMaker.Infrastructure\\Data\\Migrations\\202602131247087_AddedIndexes.cs",
-              "RelativeDocumentMoniker": "..\\QuizMaker.Infrastructure\\Data\\Migrations\\202602131247087_AddedIndexes.cs",
-              "ToolTip": "C:\\Users\\vedad\\source\\repos\\QuizMaker.Infrastructure\\Data\\Migrations\\202602131247087_AddedIndexes.cs",
-              "RelativeToolTip": "..\\QuizMaker.Infrastructure\\Data\\Migrations\\202602131247087_AddedIndexes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ValidationConstants.cs",
+              "DocumentMoniker": "C:\\Users\\vedad\\Dev\\QuizMaker\\QuizMaker.Application\\Validation\\ValidationConstants.cs",
+              "RelativeDocumentMoniker": "..\\QuizMaker.Application\\Validation\\ValidationConstants.cs",
+              "ToolTip": "C:\\Users\\vedad\\Dev\\QuizMaker\\QuizMaker.Application\\Validation\\ValidationConstants.cs",
+              "RelativeToolTip": "..\\QuizMaker.Application\\Validation\\ValidationConstants.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAIwBcAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-13T12:47:10.765Z",
+              "WhenOpened": "2026-02-13T13:42:43.075Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DbContext.cs",
-              "DocumentMoniker": "C:\\Users\\vedad\\source\\repos\\QuizMaker.Infrastructure\\Data\\DbContext.cs",
-              "RelativeDocumentMoniker": "..\\QuizMaker.Infrastructure\\Data\\DbContext.cs",
-              "ToolTip": "C:\\Users\\vedad\\source\\repos\\QuizMaker.Infrastructure\\Data\\DbContext.cs",
-              "RelativeToolTip": "..\\QuizMaker.Infrastructure\\Data\\DbContext.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "QuestionService.cs",
+              "DocumentMoniker": "C:\\Users\\vedad\\Dev\\QuizMaker\\QuizMaker.Application\\Services\\QuestionService.cs",
+              "RelativeDocumentMoniker": "..\\QuizMaker.Application\\Services\\QuestionService.cs",
+              "ToolTip": "C:\\Users\\vedad\\Dev\\QuizMaker\\QuizMaker.Application\\Services\\QuestionService.cs",
+              "RelativeToolTip": "..\\QuizMaker.Application\\Services\\QuestionService.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAAwDAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-13T12:45:39.342Z",
+              "WhenOpened": "2026-02-13T13:55:11.245Z",
               "EditorCaption": ""
             }
           ]

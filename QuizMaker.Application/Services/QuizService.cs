@@ -1,6 +1,7 @@
 ﻿using QuizMaker.Application.Dtos;
 using QuizMaker.Application.Exceptions;
 using QuizMaker.Application.Requests;
+using QuizMaker.Application.Validation;
 using QuizMaker.Domain.Entities;
 using QuizMaker.Domain.Enums;
 using QuizMaker.Domain.Interfaces;
@@ -62,8 +63,8 @@ namespace QuizMaker.Application.Services
         /// </remarks>
         public async Task<PagedResult<QuizListItemDto>> GetPagedAsync(QuizPagedRequest request)
         {
-            var page = request?.Page ?? 1;
-            var pageSize = request?.PageSize ?? 50;
+            var page = request?.Page ?? ValidationConstants.DefaultPage;
+            var pageSize = request?.PageSize ?? ValidationConstants.DefaultPageSize;
             var search = request?.Search;
             var sortOrder = request?.SortOrder ?? SortOrder.Desc;
 
@@ -140,37 +141,23 @@ namespace QuizMaker.Application.Services
         public async Task<Guid> CreateAsync(CreateQuizRequest request)
         {
             if (request == null)
-                throw new MissingArgumentException("Request model for Create Quiz is missing.", nameof(request));
+                throw new MissingArgumentException("Request body is required.", nameof(request));
 
             var now = DateTime.UtcNow;
 
-            var existingIds = (request.ExistingQuestionIds ?? new List<Guid>())
-                .Where(id => id != Guid.Empty)
-                .Distinct()
-                .ToList();
+            var quizName = NormalizeRequired(request.Name, "Quiz name is required.", nameof(request.Name), ValidationConstants.QuizNameMaxLength);
 
-            var existingQuestions = await _questionRepository.GetByIdsAsync(existingIds);
-            var existingById = existingQuestions.ToDictionary(q => q.Id, q => q);
+            var existingIds = NormalizeIds(request.ExistingQuestionIds);
+            var newQuestions = NormalizeNewQuestions(request.NewQuestions, now);
 
-            var newQuestions = (request.NewQuestions ?? new List<NewQuestionRequest>())
-                .Where(q => q != null && !string.IsNullOrWhiteSpace(q.Text) && !string.IsNullOrWhiteSpace(q.CorrectAnswer))
-                .Select(q => new Question
-                {
-                    Id = Guid.NewGuid(),
-                    Text = q.Text.Trim(),
-                    CorrectAnswer = q.CorrectAnswer.Trim(),
-                    CreatedAtUtc = now,
-                    UpdatedAtUtc = null
-                })
-                .ToList();
+            EnsureHasAtLeastOneQuestion(existingIds, newQuestions);
 
-            if (newQuestions.Count > 0)
-                await _questionRepository.AddRangeAsync(newQuestions);
+            var existingById = await LoadExistingQuestionsOrThrow(existingIds);
 
             var quiz = new Quiz
             {
                 Id = Guid.NewGuid(),
-                Name = (request.Name ?? string.Empty).Trim(),
+                Name = quizName,
                 IsDeleted = false,
                 DeletedAtUtc = null,
                 CreatedAtUtc = now,
@@ -178,32 +165,10 @@ namespace QuizMaker.Application.Services
                 QuizQuestions = new List<QuizQuestion>()
             };
 
-            var sort = 0;
+            if (newQuestions.Count > 0)
+                await _questionRepository.AddRangeAsync(newQuestions);
 
-            foreach (var id in existingIds)
-            {
-                if (!existingById.ContainsKey(id))
-                    continue;
-
-                quiz.QuizQuestions.Add(new QuizQuestion
-                {
-                    Quiz = quiz,
-                    QuestionId = id,
-                    DisplayOrder = sort++,
-                    CreatedAtUtc = now
-                });
-            }
-
-            foreach (var nq in newQuestions)
-            {
-                quiz.QuizQuestions.Add(new QuizQuestion
-                {
-                    Quiz = quiz,
-                    Question = nq,
-                    DisplayOrder = sort++,
-                    CreatedAtUtc = now
-                });
-            }
+            quiz.QuizQuestions = BuildQuizQuestions(quiz.Id, quiz, existingIds, existingById, newQuestions, now);
 
             await _quizRepository.AddAsync(quiz);
             await _unitOfWork.SaveChangesAsync();
@@ -236,36 +201,28 @@ namespace QuizMaker.Application.Services
         /// </remarks>
         public async Task<bool> UpdateAsync(Guid id, UpdateQuizRequest request)
         {
+            if (id == Guid.Empty)
+                throw new MissingArgumentException("Quiz id is required.", nameof(id));
+
             if (request == null)
-                throw new MissingArgumentException("Request model for Update Quiz is missing.", nameof(request));
+                throw new MissingArgumentException("Request body is required.", nameof(request));
 
             var quiz = await _quizRepository.GetByIdWithQuestionsAsync(id);
             if (quiz == null)
-                throw new EntityNotFoundException(nameof(quiz), id.ToString());
+                throw new EntityNotFoundException(nameof(Quiz), id.ToString());
 
             var now = DateTime.UtcNow;
 
-            quiz.Name = (request.Name ?? string.Empty).Trim();
+            var quizName = NormalizeRequired(request.Name, "Quiz name is required.", nameof(request.Name), ValidationConstants.QuizNameMaxLength);
+            var existingIds = NormalizeIds(request.ExistingQuestionIds);
+            var newQuestions = NormalizeNewQuestions(request.NewQuestions, now);
+
+            EnsureHasAtLeastOneQuestion(existingIds, newQuestions);
+
+            var existingById = await LoadExistingQuestionsOrThrow(existingIds);
+
+            quiz.Name = quizName;
             quiz.UpdatedAtUtc = now;
-
-            var existingIds = (request.ExistingQuestionIds ?? new List<Guid>())
-                .Where(qid => qid != Guid.Empty)
-                .Distinct()
-                .ToList();
-
-            var existingQuestions = await _questionRepository.GetByIdsAsync(existingIds);
-            var existingById = existingQuestions.ToDictionary(q => q.Id, q => q);
-
-            var newQuestions = (request.NewQuestions ?? new List<NewQuestionRequest>())
-                .Where(q => q != null && !string.IsNullOrWhiteSpace(q.Text) && !string.IsNullOrWhiteSpace(q.CorrectAnswer))
-                .Select(q => new Question
-                {
-                    Text = q.Text.Trim(),
-                    CorrectAnswer = q.CorrectAnswer.Trim(),
-                    CreatedAtUtc = now,
-                    UpdatedAtUtc = null
-                })
-                .ToList();
 
             if (newQuestions.Count > 0)
                 await _questionRepository.AddRangeAsync(newQuestions);
@@ -273,32 +230,9 @@ namespace QuizMaker.Application.Services
             quiz.QuizQuestions = quiz.QuizQuestions ?? new List<QuizQuestion>();
             quiz.QuizQuestions.Clear();
 
-            var sort = 0;
-
-            foreach (var qid in existingIds)
-            {
-                if (!existingById.ContainsKey(qid))
-                    continue;
-
-                quiz.QuizQuestions.Add(new QuizQuestion
-                {
-                    QuizId = quiz.Id,
-                    QuestionId = qid,
-                    DisplayOrder = sort++,
-                    CreatedAtUtc = now
-                });
-            }
-
-            foreach (var nq in newQuestions)
-            {
-                quiz.QuizQuestions.Add(new QuizQuestion
-                {
-                    QuizId = quiz.Id,
-                    Question = nq,
-                    DisplayOrder = sort++,
-                    CreatedAtUtc = now
-                });
-            }
+            var built = BuildQuizQuestions(quiz.Id, quiz, existingIds, existingById, newQuestions, now);
+            foreach (var qq in built)
+                quiz.QuizQuestions.Add(qq);
 
             await _unitOfWork.SaveChangesAsync();
             return true;
@@ -317,6 +251,9 @@ namespace QuizMaker.Application.Services
         /// </remarks>
         public async Task<bool> DeleteAsync(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new MissingArgumentException("Quiz id is required.", nameof(id));
+
             var quiz = await _quizRepository.GetByIdWithQuestionsAsync(id);
             if (quiz == null)
                 throw new EntityNotFoundException(nameof(quiz), id.ToString());
@@ -324,6 +261,132 @@ namespace QuizMaker.Application.Services
             await _quizRepository.DeleteAsync(id);
             await _unitOfWork.SaveChangesAsync();
             return true;
+        }
+
+        private static string NormalizeRequired(string value, string message, string paramName, int maxLen)
+        {
+            var v = (value ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(v))
+                throw new MissingArgumentException(message, paramName);
+
+            if (v.Length > maxLen)
+                throw new MissingArgumentException($"'{paramName}' exceeds maximum length of {maxLen}.", paramName);
+
+            return v;
+        }
+
+        private static List<Guid> NormalizeIds(IList<Guid> ids)
+        {
+            return (ids ?? new List<Guid>())
+                .Where(x => x != Guid.Empty)
+                .Distinct()
+                .ToList();
+        }
+
+        private List<Question> NormalizeNewQuestions(IList<NewQuestionRequest> reqs, DateTime now)
+        {
+            var normalized = (reqs ?? new List<NewQuestionRequest>())
+                .Where(q => q != null)
+                .Select(q => new
+                {
+                    Text = (q.Text ?? string.Empty).Trim(),
+                    Answer = (q.CorrectAnswer ?? string.Empty).Trim()
+                })
+                .Where(q => !string.IsNullOrWhiteSpace(q.Text) && !string.IsNullOrWhiteSpace(q.Answer))
+                .ToList();
+
+            if (normalized.Any(q => q.Text.Length > ValidationConstants.QuestionTextMaxLength))
+                throw new MissingArgumentException($"Question text exceeds maximum length of {ValidationConstants.QuestionTextMaxLength}.", nameof(NewQuestionRequest.Text));
+
+            if (normalized.Any(q => q.Answer.Length > ValidationConstants.CorrectAnswerMaxLength))
+                throw new MissingArgumentException($"Correct answer exceeds maximum length of {ValidationConstants.CorrectAnswerMaxLength}.", nameof(NewQuestionRequest.CorrectAnswer));
+
+            var dup = normalized
+                .GroupBy(x => x.Text, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(g => g.Count() > 1);
+
+            if (dup != null)
+                throw new MissingArgumentException("Duplicate new questions are not allowed within the same request.", nameof(CreateQuizRequest.NewQuestions));
+
+            return normalized
+                .Select(q => new Question
+                {
+                    Id = Guid.NewGuid(),
+                    Text = q.Text,
+                    CorrectAnswer = q.Answer,
+                    CreatedAtUtc = now,
+                    UpdatedAtUtc = null,
+                    IsDeleted = false,
+                    DeletedAtUtc = null
+                })
+                .ToList();
+        }
+
+        private static void EnsureHasAtLeastOneQuestion(IReadOnlyCollection<Guid> existingIds, IReadOnlyCollection<Question> newQuestions)
+        {
+            if ((existingIds == null || existingIds.Count == 0) && (newQuestions == null || newQuestions.Count == 0))
+                throw new MissingArgumentException("Quiz must contain at least one question.", "questions");
+        }
+
+        private async Task<Dictionary<Guid, Question>> LoadExistingQuestionsOrThrow(IReadOnlyCollection<Guid> existingIds)
+        {
+            if (existingIds == null || existingIds.Count == 0)
+                return new Dictionary<Guid, Question>();
+
+            var existingQuestions = await _questionRepository.GetByIdsAsync(existingIds);
+            var existingById = existingQuestions.ToDictionary(q => q.Id, q => q);
+
+            var missing = existingIds.Where(id => !existingById.ContainsKey(id)).ToList();
+            if (missing.Count > 0)
+                throw new MissingArgumentException("One or more existingQuestionIds do not exist.", nameof(CreateQuizRequest.ExistingQuestionIds));
+
+            return existingById;
+        }
+
+        private static List<QuizQuestion> BuildQuizQuestions(
+            Guid quizId,
+            Quiz quiz,
+            IReadOnlyList<Guid> existingIds,
+            IDictionary<Guid, Question> existingById,
+            IReadOnlyList<Question> newQuestions,
+            DateTime now)
+        {
+            var result = new List<QuizQuestion>();
+            var order = 0;
+
+            foreach (var id in existingIds ?? new List<Guid>())
+            {
+                if (existingById != null && existingById.ContainsKey(id))
+                {
+                    result.Add(new QuizQuestion
+                    {
+                        QuizId = quizId,
+                        Quiz = quiz,
+                        QuestionId = id,
+                        DisplayOrder = order++,
+                        CreatedAtUtc = now,
+                        IsDeleted = false,
+                        DeletedAtUtc = null
+                    });
+                }
+            }
+
+            foreach (var nq in newQuestions ?? new List<Question>())
+            {
+                result.Add(new QuizQuestion
+                {
+                    QuizId = quizId,
+                    Quiz = quiz,
+                    QuestionId = nq.Id,
+                    Question = nq,
+                    DisplayOrder = order++,
+                    CreatedAtUtc = now,
+                    IsDeleted = false,
+                    DeletedAtUtc = null
+                });
+            }
+
+            return result;
         }
     }
 }

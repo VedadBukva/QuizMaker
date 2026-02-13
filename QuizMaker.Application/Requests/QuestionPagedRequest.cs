@@ -1,4 +1,7 @@
-﻿namespace QuizMaker.Application.Requests
+﻿using QuizMaker.Application.Validation;
+using System.ComponentModel.DataAnnotations;
+
+namespace QuizMaker.Application.Requests
 {
     /// <summary>
     /// Represents query parameters used for searching and paginating questions.
@@ -21,6 +24,7 @@
         /// <summary>
         /// Page number to retrieve (starts from 1).
         /// </summary>
+        [Range(ValidationConstants.DefaultPage, int.MaxValue)]
         public int Page { get; set; } = 1;
 
         /// <summary>
@@ -29,6 +33,7 @@
         /// <remarks>
         /// Default value is 50. The API may enforce a maximum limit.
         /// </remarks>
+        [Range(ValidationConstants.DefaultPageSize, ValidationConstants.MaxPageSize)]
         public int PageSize { get; set; } = 50;
     }
 

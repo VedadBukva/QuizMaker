@@ -9,3 +9,14 @@ C:\Users\vedad\source\repos\QuizMaker.Application\obj\Debug\QuizMaker.Applicatio
 C:\Users\vedad\source\repos\QuizMaker.Application\obj\Debug\QuizMake.35494E7E.Up2Date
 C:\Users\vedad\source\repos\QuizMaker.Application\obj\Debug\QuizMaker.Application.dll
 C:\Users\vedad\source\repos\QuizMaker.Application\obj\Debug\QuizMaker.Application.pdb
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Application.xml
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Application.dll
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Application.pdb
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Domain.dll
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Domain.pdb
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\bin\QuizMaker.Domain.xml
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\obj\Debug\QuizMaker.Application.csproj.AssemblyReference.cache
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\obj\Debug\QuizMaker.Application.csproj.CoreCompileInputs.cache
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\obj\Debug\QuizMake.35494E7E.Up2Date
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\obj\Debug\QuizMaker.Application.dll
+C:\Users\vedad\Dev\QuizMaker\QuizMaker.Application\obj\Debug\QuizMaker.Application.pdb

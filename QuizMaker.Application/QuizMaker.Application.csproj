@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,7 +53,7 @@
     <Compile Include="Exceptions\MissingArgumentException.cs" />
     <Compile Include="Exceptions\ExporterNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Requests\CreateQuiz.cs" />
+    <Compile Include="Requests\CreateQuizRequest.cs" />
     <Compile Include="Requests\NewQuestionRequest.cs" />
     <Compile Include="Requests\QuestionPagedRequest.cs" />
     <Compile Include="Requests\QuizPagedRequest.cs" />
@@ -61,10 +62,9 @@
     <Compile Include="Services\QuestionService.cs" />
     <Compile Include="Services\QuizExportService.cs" />
     <Compile Include="Services\QuizService.cs" />
+    <Compile Include="Validation\ValidationConstants.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validation\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\QuizMaker.Domain\QuizMaker.Domain.csproj">
       <Project>{6CCF5DE5-E146-4218-A345-7FE28BBC5214}</Project>

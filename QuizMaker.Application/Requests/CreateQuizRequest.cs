@@ -1,5 +1,7 @@
-﻿using System;
+﻿using QuizMaker.Application.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace QuizMaker.Application.Requests
 {
@@ -20,6 +22,8 @@ namespace QuizMaker.Application.Requests
         /// <remarks>
         /// This value is required and should be unique within the system.
         /// </remarks>
+        [Required]
+        [StringLength(ValidationConstants.QuizNameMaxLength, MinimumLength = ValidationConstants.QuizNameMinLength)]
         public string Name { get; set; }
 
         /// <summary>
@@ -37,6 +41,7 @@ namespace QuizMaker.Application.Requests
         /// <remarks>
         /// Each question must include question text and correct answer.
         /// </remarks>
+        [MaxLength(ValidationConstants.QuizQuestionsMaxLength)]
         public IList<NewQuestionRequest> NewQuestions { get; set; } = new List<NewQuestionRequest>();
     }
 }
