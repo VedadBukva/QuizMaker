@@ -59,7 +59,7 @@ Supported formats:
 - CSV
 - TXT
 - JSON
-- TXT
+- XML
 
 New exporters can be added without recompiling the API by implementing `IQuizExporter` and placing the compiled DLL in the exporters folder.
 
