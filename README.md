@@ -18,7 +18,7 @@ The solution follows a layered architecture:
 
 ## ⚙️ Requirements
 
-- Visual Studio 2022 (or 2019)
+- Visual Studio 2019 (or newer)
 - .NET Framework 4.8 Developer Pack
 - Tested with SQL Server LocalDB (MSSQLLocalDB).
 Can also run on SQL Server Express by updating the connection string.
