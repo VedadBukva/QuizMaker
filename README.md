@@ -56,7 +56,8 @@ Exporters are dynamically loaded using MEF.
 Supported formats:
 - CSV
 - TXT
-- PDF
+- JSON
+- TXT
 
 New exporters can be added without recompiling the API by implementing `IQuizExporter` and placing the compiled DLL in the exporters folder.
 
