@@ -18,9 +18,10 @@ The solution follows a layered architecture:
 
 ## ⚙️ Requirements
 
-- Visual Studio 2022 (or 2019)
+- Visual Studio 2019 (or newer)
 - .NET Framework 4.8 Developer Pack
-- SQL Server LocalDB or SQL Server Express
+- Tested with SQL Server LocalDB (MSSQLLocalDB).
+Can also run on SQL Server Express by updating the connection string.
 
 ---
 
@@ -30,5 +31,61 @@ The solution follows a layered architecture:
 2. Ensure connection string is set in `Web.config`.
 3. Open **Package Manager Console**.
 4. Set Default project to `QuizMaker.Infrastructure`.
-5. Run:
+5. Run: **Update-Database**
+6. Press F5 to run the project.
+7. Swagger UI is available at: https://localhost:{port}/swagger
 
+
+---
+
+## 📌 Main Endpoints
+
+- `GET /api/quizzes`
+- `POST /api/quizzes`
+- `GET /api/quizzes/{id}`
+- `PUT /api/quizzes/{id}`
+- `DELETE /api/quizzes/{id}`
+- `GET /api/questions`
+- `GET /api/exporters`
+- `GET /api/quizzes/{id}/export?exporter=csv`
+
+---
+
+## 📤 Export System (MEF)
+
+Exporters are dynamically loaded using MEF.
+
+Supported formats:
+- CSV
+- TXT
+- JSON
+- TXT
+
+New exporters can be added without recompiling the API by implementing `IQuizExporter` and placing the compiled DLL in the exporters folder.
+
+---
+
+## 🧪 Testing
+
+Includes unit tests for:
+- Quiz creation logic
+- Export service validation
+- Question search with pagination
+
+---
+
+## 📚 Design Notes
+
+- Soft delete is implemented for quizzes.
+- Questions are reusable across multiple quizzes.
+- Join entity (`QuizQuestion`) preserves question order.
+- Pagination and indexing are implemented for scalability.
+- Global exception handling ensures consistent API responses.
+
+---
+
+## 🔧 Trade-offs
+
+- Search is implemented using SQL `LIKE`. Full-text search would be recommended for large-scale systems.
+- Repository + Unit of Work pattern is used for clean separation of concerns.
+- Pagination is implemented using page/pageSize for simplicity. For very large datasets and high page numbers, keyset/continuation-token pagination would be recommended to avoid performance degradation of OFFSET paging.
