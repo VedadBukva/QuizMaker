@@ -30,5 +30,58 @@ The solution follows a layered architecture:
 2. Ensure connection string is set in `Web.config`.
 3. Open **Package Manager Console**.
 4. Set Default project to `QuizMaker.Infrastructure`.
-5. Run:
+5. Press F5 to run the project.
+6. Swagger UI is available at:
 
+
+---
+
+## 📌 Main Endpoints
+
+- `GET /api/quizzes`
+- `POST /api/quizzes`
+- `GET /api/quizzes/{id}`
+- `PUT /api/quizzes/{id}`
+- `DELETE /api/quizzes/{id}`
+- `GET /api/questions`
+- `GET /api/exporters`
+- `GET /api/quizzes/{id}/export?exporter=csv`
+
+---
+
+## 📤 Export System (MEF)
+
+Exporters are dynamically loaded using MEF.
+
+Supported formats:
+- CSV
+- TXT
+- PDF
+
+New exporters can be added without recompiling the API by implementing `IQuizExporter` and placing the compiled DLL in the exporters folder.
+
+---
+
+## 🧪 Testing
+
+Includes unit tests for:
+- Quiz creation logic
+- Export service validation
+- Question search with pagination
+
+---
+
+## 📚 Design Notes
+
+- Soft delete is implemented for quizzes.
+- Questions are reusable across multiple quizzes.
+- Join entity (`QuizQuestion`) preserves question order.
+- Pagination and indexing are implemented for scalability.
+- Global exception handling ensures consistent API responses.
+
+---
+
+## 🔧 Trade-offs
+
+- Search is implemented using SQL `LIKE`. Full-text search would be recommended for large-scale systems.
+- Repository + Unit of Work pattern is used for clean separation of concerns.
